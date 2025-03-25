@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { 
   Card, 
@@ -34,11 +33,14 @@ import {
 import { Bell, CheckCircle, Clock, XCircle, MoreHorizontal, Send, Edit, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import EditNotificationModal from "./EditNotificationModal";
 
 const NotificationQueue: React.FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>(() => getNotifications());
   const [statusFilter, setStatusFilter] = useState<NotificationStatus | "all">("all");
   const [typeFilter, setTypeFilter] = useState<"all" | "email" | "sms">("all");
+  const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const getStatusColor = (status: NotificationStatus): string => {
     switch (status) {
@@ -90,7 +92,6 @@ const NotificationQueue: React.FC = () => {
       {
         loading: `Sending ${type}...`,
         success: () => {
-          // Update notification status in state
           const updatedNotifications = notifications.map(n => 
             n.id === notification.id 
               ? { ...n, status: "sent" as NotificationStatus, sentAt: new Date() } 
@@ -114,13 +115,19 @@ const NotificationQueue: React.FC = () => {
     if (type === "email") {
       return recipient;
     }
-    // Format phone number
     return recipient.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
   };
 
   const handleEdit = (notification: Notification) => {
-    toast.info("Edit functionality would open an editor");
-    // Would open a modal to edit the notification
+    setSelectedNotification(notification);
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveEdit = (updatedNotification: Notification) => {
+    const updatedNotifications = notifications.map(n => 
+      n.id === updatedNotification.id ? updatedNotification : n
+    );
+    setNotifications(updatedNotifications);
   };
 
   return (
@@ -290,6 +297,13 @@ const NotificationQueue: React.FC = () => {
           })
         )}
       </div>
+      
+      <EditNotificationModal
+        notification={selectedNotification}
+        open={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onSave={handleSaveEdit}
+      />
     </div>
   );
 };
