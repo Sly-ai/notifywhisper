@@ -320,7 +320,7 @@ const NotificationTemplates: React.FC = () => {
                   onChange={handleVariablesChange}
                 />
                 <p className="text-xs text-muted-foreground mt-1">
-                  Use {{variableName}} in your template text.
+                  Use {"{{"}<span>variableName</span>{"}}"}  in your template text.
                 </p>
               </div>
             </div>
