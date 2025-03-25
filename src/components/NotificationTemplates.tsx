@@ -371,7 +371,7 @@ const NotificationTemplates: React.FC = () => {
             <div className="flex flex-wrap gap-2">
               {previewTemplate?.variables.map(variable => (
                 <Badge key={variable} variant="secondary">
-                  {{variable}}
+                  {`{{${variable}}}`}
                 </Badge>
               ))}
             </div>
