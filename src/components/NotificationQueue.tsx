@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { 
   Card, 
@@ -30,6 +31,7 @@ import {
   sendEmailNotification,
   sendSmsNotification 
 } from "@/services/notificationService";
+import { updateNotification } from "@/utils/notificationUtils";
 import { Bell, CheckCircle, Clock, XCircle, MoreHorizontal, Send, Edit, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -215,6 +217,19 @@ const NotificationQueue: React.FC = () => {
                       <Badge className={`${getPriorityColor(notification.priority)} text-white`}>
                         {notification.priority.charAt(0).toUpperCase() + notification.priority.slice(1)}
                       </Badge>
+                      
+                      {/* Add Send CTA button here for quick access */}
+                      {notification.status !== "sent" && (
+                        <Button 
+                          variant="outline"
+                          size="sm"
+                          className="gap-1 flex items-center"
+                          onClick={() => handleSendNow(notification)}
+                        >
+                          <Send className="h-3 w-3" />
+                          <span>Send</span>
+                        </Button>
+                      )}
                       
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
