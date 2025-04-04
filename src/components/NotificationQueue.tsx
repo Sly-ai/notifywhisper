@@ -1,12 +1,14 @@
 
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { useNotifications } from "@/hooks/useNotifications";
 import NotificationCard from "./notification/NotificationCard";
 import NotificationFilters from "./notification/NotificationFilters";
 import EmptyNotifications from "./notification/EmptyNotifications";
 import EditNotificationModal from "./EditNotificationModal";
 import { Notification } from "@/services/notificationService";
+import { MessageSquare } from "lucide-react";
 
 const NotificationQueue: React.FC = () => {
   const { 
@@ -28,6 +30,14 @@ const NotificationQueue: React.FC = () => {
     setIsEditModalOpen(true);
   };
 
+  // Function to switch to the composer tab
+  const switchToComposer = () => {
+    const composerTab = document.querySelector('[data-value="composer"]');
+    if (composerTab) {
+      composerTab.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    }
+  };
+
   return (
     <div className="container mx-auto p-6 max-w-4xl animate-fade-in">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -38,17 +48,23 @@ const NotificationQueue: React.FC = () => {
           </p>
         </div>
         
-        <NotificationFilters 
-          statusFilter={statusFilter}
-          typeFilter={typeFilter}
-          onStatusFilterChange={setStatusFilter}
-          onTypeFilterChange={setTypeFilter}
-        />
+        <div className="flex gap-3">
+          <Button onClick={switchToComposer} className="button-animation">
+            <MessageSquare className="mr-2 h-4 w-4" />
+            New Message
+          </Button>
+          <NotificationFilters 
+            statusFilter={statusFilter}
+            typeFilter={typeFilter}
+            onStatusFilterChange={setStatusFilter}
+            onTypeFilterChange={setTypeFilter}
+          />
+        </div>
       </div>
 
       <div className="space-y-6">
         {filteredNotifications.length === 0 ? (
-          <EmptyNotifications />
+          <EmptyNotifications onCompose={switchToComposer} />
         ) : (
           filteredNotifications.map(notification => (
             <NotificationCard

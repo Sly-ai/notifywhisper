@@ -4,17 +4,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import NotificationServiceSettings from "@/components/NotificationServiceSettings";
 import NotificationTemplates from "@/components/NotificationTemplates";
 import NotificationQueue from "@/components/NotificationQueue";
+import NotificationComposer from "@/components/NotificationComposer";
 import { 
   ArrowLeft, 
   Settings, 
   FileText, 
-  ListChecks
+  ListChecks,
+  MessageSquare
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 const NotificationsPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("queue");
+  const [activeTab, setActiveTab] = useState("composer");
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20 pb-10">
@@ -38,10 +40,14 @@ const NotificationsPage: React.FC = () => {
           className="space-y-8"
         >
           <div className="bg-background/80 backdrop-blur-sm rounded-xl p-2 shadow-sm border">
-            <TabsList className="grid grid-cols-3 w-full">
+            <TabsList className="grid grid-cols-4 w-full">
+              <TabsTrigger value="composer" className="flex items-center gap-2 py-3">
+                <MessageSquare className="h-4 w-4" />
+                <span>Compose</span>
+              </TabsTrigger>
               <TabsTrigger value="queue" className="flex items-center gap-2 py-3">
                 <ListChecks className="h-4 w-4" />
-                <span>Notification Queue</span>
+                <span>Queue</span>
               </TabsTrigger>
               <TabsTrigger value="templates" className="flex items-center gap-2 py-3">
                 <FileText className="h-4 w-4" />
@@ -49,11 +55,15 @@ const NotificationsPage: React.FC = () => {
               </TabsTrigger>
               <TabsTrigger value="settings" className="flex items-center gap-2 py-3">
                 <Settings className="h-4 w-4" />
-                <span>Service Settings</span>
+                <span>Settings</span>
               </TabsTrigger>
             </TabsList>
           </div>
 
+          <TabsContent value="composer" className="animate-scale-in">
+            <NotificationComposer />
+          </TabsContent>
+          
           <TabsContent value="queue" className="animate-scale-in">
             <NotificationQueue />
           </TabsContent>
