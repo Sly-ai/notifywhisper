@@ -5,16 +5,22 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 interface EmptyNotificationsProps {
+  title?: string;
+  description?: string;
   onCompose?: () => void;
 }
 
-const EmptyNotifications: React.FC<EmptyNotificationsProps> = ({ onCompose }) => {
+const EmptyNotifications: React.FC<EmptyNotificationsProps> = ({ 
+  title = "No notifications found", 
+  description = "Try changing your filter settings or create new notifications", 
+  onCompose 
+}) => {
   return (
     <div className="text-center p-10 border border-dashed rounded-lg">
       <Bell className="mx-auto h-10 w-10 text-muted-foreground mb-4" />
-      <p className="text-muted-foreground mb-2">No notifications found</p>
+      <p className="text-muted-foreground mb-2">{title}</p>
       <p className="text-xs text-muted-foreground mb-4">
-        Try changing your filter settings or create new notifications
+        {description}
       </p>
       
       {onCompose ? (
