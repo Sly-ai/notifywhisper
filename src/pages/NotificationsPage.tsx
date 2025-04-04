@@ -3,10 +3,12 @@ import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import NotificationServiceSettings from "@/components/NotificationServiceSettings";
 import NotificationComposer from "@/components/NotificationComposer";
+import NotificationHistory from "@/components/notification/NotificationHistory";
 import { 
   ArrowLeft, 
   Settings, 
-  MessageSquare
+  MessageSquare,
+  History
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -36,10 +38,14 @@ const NotificationsPage: React.FC = () => {
           className="space-y-8"
         >
           <div className="bg-background/80 backdrop-blur-sm rounded-xl p-2 shadow-sm border">
-            <TabsList className="grid grid-cols-2 w-full">
+            <TabsList className="grid grid-cols-3 w-full">
               <TabsTrigger value="composer" className="flex items-center gap-2 py-3">
                 <MessageSquare className="h-4 w-4" />
                 <span>Compose</span>
+              </TabsTrigger>
+              <TabsTrigger value="history" className="flex items-center gap-2 py-3">
+                <History className="h-4 w-4" />
+                <span>Sent</span>
               </TabsTrigger>
               <TabsTrigger value="settings" className="flex items-center gap-2 py-3">
                 <Settings className="h-4 w-4" />
@@ -50,6 +56,10 @@ const NotificationsPage: React.FC = () => {
 
           <TabsContent value="composer" className="animate-scale-in">
             <NotificationComposer />
+          </TabsContent>
+          
+          <TabsContent value="history" className="animate-scale-in">
+            <NotificationHistory />
           </TabsContent>
           
           <TabsContent value="settings" className="animate-scale-in">
