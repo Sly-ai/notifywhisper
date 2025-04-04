@@ -10,6 +10,9 @@ import {
 } from "@/services/notificationService";
 import { toast } from "sonner";
 
+// Standard variables for all notifications
+const STANDARD_VARIABLES = ['borrower_name', 'loan_id', 'amount_due', 'due_date'];
+
 export const useNotifications = () => {
   const [notifications, setNotifications] = useState<Notification[]>(() => getNotifications());
   const [statusFilter, setStatusFilter] = useState<NotificationStatus | "all">("all");
@@ -26,6 +29,13 @@ export const useNotifications = () => {
     const matchesType = typeFilter === "all" || type === typeFilter;
     return matchesStatus && matchesType;
   });
+
+  const getAvailableVariables = (notification: Notification): string[] => {
+    const template = getTemplate(notification.templateId);
+    return [...STANDARD_VARIABLES, ...(template?.variables || [])].filter(
+      (value, index, self) => self.indexOf(value) === index
+    );
+  };
 
   const handleSendNow = async (notification: Notification) => {
     const type = getNotificationType(notification);
@@ -71,6 +81,7 @@ export const useNotifications = () => {
     setStatusFilter,
     setTypeFilter,
     getNotificationType,
+    getAvailableVariables,
     handleSendNow,
     handleDeleteNotification,
     handleSaveEdit

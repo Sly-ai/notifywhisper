@@ -47,6 +47,14 @@ interface Recipient {
   phone?: string;
 }
 
+// Define the standard variables available in all templates
+const STANDARD_VARIABLES = [
+  'borrower_name',
+  'loan_id',
+  'amount_due',
+  'due_date'
+];
+
 const MOCK_RECIPIENTS: Recipient[] = [
   { id: '1', name: 'John Doe', email: 'john@example.com', phone: '+1234567890' },
   { id: '2', name: 'Jane Smith', email: 'jane@example.com', phone: '+1987654321' },
@@ -76,8 +84,11 @@ const NotificationComposer: React.FC = () => {
   // Filter templates based on message type
   const filteredTemplates = templates.filter(template => template.type === messageType);
 
-  // Get available variables when a template is selected
-  const availableVariables = selectedTemplate?.variables || [];
+  // Get available variables, combining standard variables with template-specific ones
+  const availableVariables = [
+    ...STANDARD_VARIABLES,
+    ...(selectedTemplate?.variables || [])
+  ].filter((value, index, self) => self.indexOf(value) === index); // Remove duplicates
   
   // Filter recipients based on search term
   const filteredRecipients = MOCK_RECIPIENTS.filter(recipient => {
@@ -156,37 +167,41 @@ const NotificationComposer: React.FC = () => {
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     // Check for '/' to trigger command
     if (e.key === '/' && !commandOpen) {
+      e.preventDefault();
+      updateCursorPosition();
       updateCommandPosition();
       setCommandOpen(true);
       setSearchTerm("");
-      e.preventDefault();
     }
     // Close command with Escape
     else if (e.key === 'Escape' && commandOpen) {
-      setCommandOpen(false);
       e.preventDefault();
+      setCommandOpen(false);
     }
   };
 
   // Insert variable at cursor position
   const insertVariable = (variable: string) => {
-    const newMessage = 
-      message.substring(0, cursorPosition) + 
-      `{{${variable}}}` + 
-      message.substring(cursorPosition);
-    
-    setMessage(newMessage);
-    setCommandOpen(false);
-    
-    // Set focus back to textarea and move cursor past the inserted variable
-    setTimeout(() => {
-      if (textareaRef.current) {
-        textareaRef.current.focus();
-        const newPos = cursorPosition + variable.length + 4; // +4 for {{ }}
-        textareaRef.current.setSelectionRange(newPos, newPos);
-        updateCursorPosition();
-      }
-    }, 0);
+    if (textareaRef.current) {
+      const curPos = getCursorPosition();
+      const newMessage = 
+        message.substring(0, curPos) + 
+        `{{${variable}}}` + 
+        message.substring(curPos);
+      
+      setMessage(newMessage);
+      setCommandOpen(false);
+      
+      // Set focus back to textarea and move cursor past the inserted variable
+      setTimeout(() => {
+        if (textareaRef.current) {
+          textareaRef.current.focus();
+          const newPos = curPos + variable.length + 4; // +4 for {{ }}
+          textareaRef.current.setSelectionRange(newPos, newPos);
+          setCursorPosition(newPos);
+        }
+      }, 0);
+    }
   };
 
   // Handle selecting a recipient
@@ -413,7 +428,7 @@ const NotificationComposer: React.FC = () => {
                     placeholder="Search variables..." 
                     value={searchTerm}
                     onValueChange={setSearchTerm}
-                    className="h-9"
+                    autoFocus
                   />
                   <CommandList className="max-h-[200px]">
                     <CommandEmpty>No variables found</CommandEmpty>

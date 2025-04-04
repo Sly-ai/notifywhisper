@@ -1,4 +1,3 @@
-
 export type NotificationType = 'email' | 'sms';
 export type NotificationPriority = 'low' | 'medium' | 'high';
 export type NotificationStatus = 'scheduled' | 'sent' | 'failed' | 'draft';
@@ -42,6 +41,9 @@ export interface SmsConfig {
   fromNumber: string;
 }
 
+// Standard variables that should be available in all templates
+const STANDARD_VARIABLES = ['borrower_name', 'loan_id', 'amount_due', 'due_date'];
+
 // Mock data
 const emailTemplates: NotificationTemplate[] = [
   {
@@ -49,8 +51,8 @@ const emailTemplates: NotificationTemplate[] = [
     name: 'Payment Reminder',
     type: 'email',
     subject: 'Your payment is due soon',
-    body: 'Dear {{name}}, this is a reminder that your payment of {{amount}} is due on {{dueDate}}.',
-    variables: ['name', 'amount', 'dueDate'],
+    body: 'Dear {{borrower_name}}, this is a reminder that your payment of {{amount_due}} for loan #{{loan_id}} is due on {{due_date}}.',
+    variables: [...STANDARD_VARIABLES, 'name', 'amount', 'dueDate'],
     createdAt: new Date('2023-01-01'),
     updatedAt: new Date('2023-01-01')
   },
@@ -59,8 +61,8 @@ const emailTemplates: NotificationTemplate[] = [
     name: 'Payment Overdue',
     type: 'email',
     subject: 'Your payment is overdue',
-    body: 'Dear {{name}}, your payment of {{amount}} was due on {{dueDate}} and is now overdue. Please make your payment as soon as possible.',
-    variables: ['name', 'amount', 'dueDate'],
+    body: 'Dear {{borrower_name}}, your payment of {{amount_due}} for loan #{{loan_id}} was due on {{due_date}} and is now overdue. Please make your payment as soon as possible.',
+    variables: [...STANDARD_VARIABLES, 'name', 'amount', 'dueDate'],
     createdAt: new Date('2023-01-02'),
     updatedAt: new Date('2023-01-02')
   },
@@ -69,8 +71,8 @@ const emailTemplates: NotificationTemplate[] = [
     name: 'Payment Confirmation',
     type: 'email',
     subject: 'Payment Confirmation',
-    body: 'Dear {{name}}, we have received your payment of {{amount}}. Thank you.',
-    variables: ['name', 'amount'],
+    body: 'Dear {{borrower_name}}, we have received your payment of {{amount_due}} for loan #{{loan_id}}. Thank you.',
+    variables: [...STANDARD_VARIABLES, 'name', 'amount'],
     createdAt: new Date('2023-01-03'),
     updatedAt: new Date('2023-01-03')
   }
@@ -81,8 +83,8 @@ const smsTemplates: NotificationTemplate[] = [
     id: '4',
     name: 'SMS Payment Reminder',
     type: 'sms',
-    body: 'Hi {{name}}, reminder: payment of {{amount}} due on {{dueDate}}.',
-    variables: ['name', 'amount', 'dueDate'],
+    body: 'Hi {{borrower_name}}, reminder: payment of {{amount_due}} for loan #{{loan_id}} is due on {{due_date}}.',
+    variables: [...STANDARD_VARIABLES, 'name', 'amount', 'dueDate'],
     createdAt: new Date('2023-01-04'),
     updatedAt: new Date('2023-01-04')
   },
@@ -90,8 +92,8 @@ const smsTemplates: NotificationTemplate[] = [
     id: '5',
     name: 'SMS Payment Overdue',
     type: 'sms',
-    body: 'Hi {{name}}, your payment of {{amount}} due on {{dueDate}} is overdue. Please pay ASAP.',
-    variables: ['name', 'amount', 'dueDate'],
+    body: 'Hi {{borrower_name}}, your payment of {{amount_due}} for loan #{{loan_id}} due on {{due_date}} is overdue. Please pay ASAP.',
+    variables: [...STANDARD_VARIABLES, 'name', 'amount', 'dueDate'],
     createdAt: new Date('2023-01-05'),
     updatedAt: new Date('2023-01-05')
   }
