@@ -289,7 +289,7 @@ const NotificationComposer: React.FC = () => {
           <div className="space-y-2">
             <Label>Template</Label>
             <Select 
-              value={selectedTemplate?.id || ""} 
+              value={selectedTemplate?.id || "none"} 
               onValueChange={(value) => {
                 const template = templates.find(t => t.id === value);
                 setSelectedTemplate(template || null);
@@ -299,7 +299,7 @@ const NotificationComposer: React.FC = () => {
                 <SelectValue placeholder="Select a template (optional)" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Create from scratch</SelectItem>
+                <SelectItem value="none">Create from scratch</SelectItem>
                 {filteredTemplates.map(template => (
                   <SelectItem key={template.id} value={template.id}>
                     {template.name}
