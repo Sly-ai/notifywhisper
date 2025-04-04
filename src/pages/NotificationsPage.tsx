@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import NotificationServiceSettings from "@/components/NotificationServiceSettings";
-import NotificationComposer from "@/components/NotificationComposer";
+import NotificationComposer from "@/components/notification-composer";
 import NotificationHistory from "@/components/notification/NotificationHistory";
 import { 
   ArrowLeft, 
